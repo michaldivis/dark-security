@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DarkSecurity\DarkSecurity.csproj" />
+    <ProjectReference Include="..\..\src\DarkSecurity\DarkSecurity.csproj" />
   </ItemGroup>
 
 </Project>
