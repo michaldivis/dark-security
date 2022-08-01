@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <PackageId>Divis.DarkSecurity</PackageId>
-    <Version>0.1.0-alpha</Version>
+    <Version>0.2.0-alpha</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Michal Diviš</Authors>
     <Description>Encryption and hashing tools</Description>
