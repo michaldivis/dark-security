@@ -7,7 +7,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace DarkSecurity
 {
     public class AesCrypter : IDisposable, ICrypter
@@ -56,6 +55,7 @@ namespace DarkSecurity
                     {
                         cs.Write(clearBytes, 0, clearBytes.Length);
                     }
+
                     plainText = Convert.ToBase64String(ms.ToArray());
                 }
             }
@@ -86,6 +86,7 @@ namespace DarkSecurity
                     {
                         cs.Write(cipherBytes, 0, cipherBytes.Length);
                     }
+
                     cipherText = Encoding.Unicode.GetString(ms.ToArray());
                 }
             }
