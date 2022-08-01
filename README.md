@@ -8,6 +8,13 @@ Encryption and hashing tools
 ## Nuget
 [![Nuget](https://img.shields.io/nuget/v/divis.darksecurity?label=DarkSecurity)](https://www.nuget.org/packages/Divis.DarkSecurity/)
 
+DarkMusicConcepts is available using [nuget](https://www.nuget.org/packages/Divis.DarkSecurity/). To install DarkSecurity, run the following command in the [Package Manager Console](http://docs.nuget.org/docs/start-here/using-the-package-manager-console)
+
+```Powershell
+PM> Install-Package Divis.DarkSecurity
+```
+
+
 ## Features
 
 ### Crypters
