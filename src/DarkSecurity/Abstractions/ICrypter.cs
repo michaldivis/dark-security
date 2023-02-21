@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System;
+using System.Threading;
 
 namespace DarkSecurity.Abstractions
 {
@@ -33,7 +34,7 @@ namespace DarkSecurity.Abstractions
         /// <returns>Cipher text</returns>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="CryptException" />
-        Task<string> EncryptAsync(string plainText);
+        Task<string> EncryptAsync(string plainText, CancellationToken ct = default);
 
         /// <summary>
         /// Decrypts cipher text into plain text asynchronously
@@ -42,6 +43,6 @@ namespace DarkSecurity.Abstractions
         /// <returns>Plain text</returns>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="CryptException" />
-        Task<string> DecryptAsync(string encryptedText);
+        Task<string> DecryptAsync(string encryptedText, CancellationToken ct = default);
     }
 }

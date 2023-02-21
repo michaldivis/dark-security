@@ -13,9 +13,11 @@ namespace DarkSecurityTests
     {
         private readonly IHasher _sut;
 
-        public static IEnumerable<object[]> TestData => _testData.Select(a => new object[] { a.plainText, a.hash });
+        public static IEnumerable<object[]> PlainTextsAndHashes => _testData.Select(a => new object[] { a.plainText, a.hash });
+        public static IEnumerable<object[]> PlainTexts => _testData.Select(a => new object[] { a.plainText });
+        public static IEnumerable<object[]> Hashes => _testData.Select(a => new object[] { a.hash });
 
-        private static IEnumerable<(string plainText, string hash)> _testData = new[]
+        private static readonly IEnumerable<(string plainText, string hash)> _testData = new[]
         {
             ("a wonderful pony went to the candy valley", "TwpSji1ePFJId9tcAykqz4CUHCAUvmRypslk3xSTns8TuJXJtHpd+g=="),
             ("monday forecast", "5FeQnl1ADZzfXasycPEHIYzZ/UY55v4ATtLxCJEVlQQ0xhPOQhyQyQ=="),
@@ -39,8 +41,8 @@ namespace DarkSecurityTests
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
-        public void HashPassword_ShouldProduceValidHash_WhenTextIsValid(string passwordText, string passwordHash)
+        [MemberData(nameof(PlainTexts))]
+        public void HashPassword_ShouldProduceValidHash_WhenTextIsValid(string passwordText)
         {
             var result = _sut.HashPassword(passwordText);
 
@@ -59,7 +61,7 @@ namespace DarkSecurityTests
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
+        [MemberData(nameof(PlainTextsAndHashes))]
         public void ComparePasswordToHash_ShouldBeTrue_WhenPasswordsMatch(string passwordText, string passwordHash)
         {
             var result = _sut.ComparePasswordToHash(passwordText, passwordHash);
@@ -68,8 +70,8 @@ namespace DarkSecurityTests
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
-        public void ComparePasswordToHash_ShouldBeFalse_WhenPasswordsDontMatch(string passwordText, string passwordHash)
+        [MemberData(nameof(Hashes))]
+        public void ComparePasswordToHash_ShouldBeFalse_WhenPasswordsDontMatch(string passwordHash)
         {
             var result = _sut.ComparePasswordToHash("differentPasswordText", passwordHash);
 
@@ -88,8 +90,8 @@ namespace DarkSecurityTests
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
-        public async Task HashPasswordAsync_ShouldProduceValidHash_WhenTextIsValid(string passwordText, string passwordHash)
+        [MemberData(nameof(PlainTexts))]
+        public async Task HashPasswordAsync_ShouldProduceValidHash_WhenTextIsValid(string passwordText)
         {
             var result = await _sut.HashPasswordAsync(passwordText);
 
@@ -108,7 +110,7 @@ namespace DarkSecurityTests
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
+        [MemberData(nameof(PlainTextsAndHashes))]
         public async Task ComparePasswordToHashAsync_ShouldBeTrue_WhenPasswordsMatch(string passwordText, string passwordHash)
         {
             var result = await _sut.ComparePasswordToHashAsync(passwordText, passwordHash);
@@ -117,8 +119,8 @@ namespace DarkSecurityTests
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
-        public async Task ComparePasswordToHashAsync_ShouldBeFalse_WhenPasswordsDontMatch(string passwordText, string passwordHash)
+        [MemberData(nameof(Hashes))]
+        public async Task ComparePasswordToHashAsync_ShouldBeFalse_WhenPasswordsDontMatch(string passwordHash)
         {
             var result = await _sut.ComparePasswordToHashAsync("differentPasswordText", passwordHash);
 

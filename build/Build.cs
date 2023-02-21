@@ -31,6 +31,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+            EnsureCleanDirectory(ArtifactsDirectory);
         });
 
     Target RestoreCore => _ => _

@@ -13,9 +13,10 @@ namespace DarkSecurityTests
     {
         private readonly ICrypter _sut;
 
-        public static IEnumerable<object[]> TestData => _testData.Select(a => new object[] { a.plainText, a.cipherText });
+        public static IEnumerable<object[]> PlainTextsAndCipherTexts => _testData.Select(a => new object[] { a.plainText, a.cipherText });
+        public static IEnumerable<object[]> PlainTexts => _testData.Select(a => new object[] { a.plainText });
 
-        private static IEnumerable<(string plainText, string cipherText)> _testData = new[]
+        private static readonly IEnumerable<(string plainText, string cipherText)> _testData = new[]
         {
             ("some text", "qzV6b5LNgxmfu+GxxPkp9u0zLvhYqNBzsTmz/FMZfPM="),
             ("monday forecast", "dBWQgeNTz8PoPFkUd6QMoXNk1N+MWn/ZEh2VCc0+eBE="),
@@ -41,8 +42,8 @@ namespace DarkSecurityTests
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
-        public void EncryptAndDecrypt_ShouldResultEqualTheOriginalText_WhenTextIsValid(string plainText, string cipherText)
+        [MemberData(nameof(PlainTexts))]
+        public void EncryptAndDecrypt_ShouldResultEqualTheOriginalText_WhenTextIsValid(string plainText)
         {
             var encrypted = _sut.Encrypt(plainText);
             var decrypted = _sut.Decrypt(encrypted);
@@ -61,8 +62,8 @@ namespace DarkSecurityTests
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
-        public void Encrypt_ShouldProduceCipherText_WhenTextIsValid(string plainText, string cipherText)
+        [MemberData(nameof(PlainTexts))]
+        public void Encrypt_ShouldProduceCipherText_WhenTextIsValid(string plainText)
         {
             var result = _sut.Encrypt(plainText);
 
@@ -89,7 +90,7 @@ namespace DarkSecurityTests
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
+        [MemberData(nameof(PlainTextsAndCipherTexts))]
         public void Decrypt_ShouldProducePlainText_WhenCipherTextIsValid(string expected, string cipherText)
         {
             var result = _sut.Decrypt(cipherText);
@@ -110,8 +111,8 @@ namespace DarkSecurityTests
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
-        public async Task EncryptAsync_ShouldProduceCipherText_WhenTextIsValid(string plainText, string cipherText)
+        [MemberData(nameof(PlainTexts))]
+        public async Task EncryptAsync_ShouldProduceCipherText_WhenTextIsValid(string plainText)
         {
             var result = await _sut.EncryptAsync(plainText);
 
@@ -138,7 +139,7 @@ namespace DarkSecurityTests
         }
 
         [Theory]
-        [MemberData(nameof(TestData))]
+        [MemberData(nameof(PlainTextsAndCipherTexts))]
         public async Task DecryptAsync_ShouldProducePlainText_WhenCipherTextIsValid(string expected, string cipherText)
         {
             var result = await _sut.DecryptAsync(cipherText);
