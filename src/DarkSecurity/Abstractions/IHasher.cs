@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System;
+using System.Threading;
 
 namespace DarkSecurity.Abstractions
 {
@@ -24,7 +25,7 @@ namespace DarkSecurity.Abstractions
         /// <returns>Password hash</returns>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="HashException" />
-        Task<string> HashPasswordAsync(string passwordText);
+        Task<string> HashPasswordAsync(string passwordText, CancellationToken ct = default);
 
         /// <summary>
         /// Checks if a password in plain text is the same as password stored in a hash
@@ -44,6 +45,6 @@ namespace DarkSecurity.Abstractions
         /// <returns><see langword="true"/> if the passwords match</returns>
         /// <exception cref="ArgumentNullException" />
         /// <exception cref="HashException" />
-        Task<bool> ComparePasswordToHashAsync(string passwordText, string passwordHash);
+        Task<bool> ComparePasswordToHashAsync(string passwordText, string passwordHash, CancellationToken ct = default);
     }
 }

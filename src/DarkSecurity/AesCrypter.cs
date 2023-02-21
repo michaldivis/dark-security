@@ -5,12 +5,16 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DarkSecurity
 {
     public class AesCrypter : IDisposable, ICrypter
     {
+        private const int _iterations = 1000;
+        private static readonly HashAlgorithmName _hashAlgorithmName = HashAlgorithmName.SHA1;
+
         private readonly Aes _encryptor;
         private readonly ILogger<AesCrypter> _logger;
 
@@ -30,13 +34,15 @@ namespace DarkSecurity
 
             _encryptor = Aes.Create();
 
-            var pdb = new Rfc2898DeriveBytes(key, IV);
+            var pdb = new Rfc2898DeriveBytes(key, IV, _iterations, _hashAlgorithmName);
 
             _encryptor.Key = pdb.GetBytes(16);
             _encryptor.IV = pdb.GetBytes(16);
         }
 
-        public AesCrypter(string key, byte[] IV) : this(key, IV, NullLoggerFactory.Instance.CreateLogger<AesCrypter>()) { }
+        public AesCrypter(string key, byte[] IV) : this(key, IV, NullLoggerFactory.Instance.CreateLogger<AesCrypter>()) 
+        {
+        }
 
         public string Encrypt(string plainText)
         {
@@ -49,15 +55,14 @@ namespace DarkSecurity
 
             try
             {
-                using (var ms = new MemoryStream())
-                {
-                    using (var cs = new CryptoStream(ms, _encryptor.CreateEncryptor(), CryptoStreamMode.Write))
-                    {
-                        cs.Write(clearBytes, 0, clearBytes.Length);
-                    }
+                using var ms = new MemoryStream();
 
-                    plainText = Convert.ToBase64String(ms.ToArray());
+                using (var cs = new CryptoStream(ms, _encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                {
+                    cs.Write(clearBytes, 0, clearBytes.Length);
                 }
+
+                plainText = Convert.ToBase64String(ms.ToArray());
             }
             catch (Exception ex)
             {
@@ -66,6 +71,11 @@ namespace DarkSecurity
             }
 
             return plainText;
+        }
+
+        public async Task<string> EncryptAsync(string text, CancellationToken ct = default)
+        {
+            return await Task.Run(() => Encrypt(text), ct).ConfigureAwait(false);
         }
 
         public string Decrypt(string cipherText)
@@ -99,14 +109,9 @@ namespace DarkSecurity
             return cipherText;
         }
 
-        public async Task<string> EncryptAsync(string text)
+        public async Task<string> DecryptAsync(string text, CancellationToken ct = default)
         {
-            return await Task.Run(() => Encrypt(text));
-        }
-
-        public async Task<string> DecryptAsync(string text)
-        {
-            return await Task.Run(() => Decrypt(text));
+            return await Task.Run(() => Decrypt(text), ct).ConfigureAwait(false);
         }
 
         public void Dispose()
